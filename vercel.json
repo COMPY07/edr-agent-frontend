@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/edr-api/:path*",
+      "destination": "https://asc4.jeonghuncompy.cloud/:path*"
+    }
+  ]
+}

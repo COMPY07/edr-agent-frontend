@@ -1,0 +1,225 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.d{font-family:var(--font-sans);padding:1.25rem;background:var(--color-background-primary)}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem}
+.topbar h1{font-size:17px;font-weight:500;color:var(--color-text-primary);letter-spacing:-.3px}
+.topbar p{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.upbtn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:12px;font-weight:500;color:var(--color-text-primary);cursor:pointer}
+.upbtn:hover{background:var(--color-background-secondary)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1rem}
+.sc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;position:relative;overflow:hidden}
+.sc-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.sc-val{font-size:28px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.sc-val.red{color:#A32D2D}
+.sc-val.mono{font-family:var(--font-mono);font-size:18px;padding-top:5px}
+.sc-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--color-border-tertiary)}
+.sc-bar-fill{height:100%;border-radius:0 2px 0 0}
+.sev-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.sev{border-radius:var(--border-radius-md);border:.5px solid var(--color-border-tertiary);padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.sev-top{display:flex;align-items:center;justify-content:space-between}
+.sev-name{font-size:12px;font-weight:500}
+.sev-num{font-size:20px;font-weight:500}
+.sev-track{height:4px;background:var(--color-border-tertiary);border-radius:2px;overflow:hidden}
+.sev-fill{height:100%;border-radius:2px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.srch{flex:1;position:relative}
+.srch i{position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--color-text-secondary);pointer-events:none}
+.srch input{width:100%;padding:7px 10px 7px 30px;font-size:12px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.tog-wrap{display:flex;align-items:center;gap:7px;padding:7px 11px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-secondary);font-size:12px;color:var(--color-text-secondary);white-space:nowrap;cursor:pointer;user-select:none}
+.tog{width:28px;height:16px;border-radius:8px;background:var(--color-border-secondary);position:relative;transition:background .2s;flex-shrink:0}
+.tog::after{content:'';width:10px;height:10px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s}
+.tog.on{background:#1D9E75}
+.tog.on::after{left:15px}
+.tsel{padding:7px 10px;border-radius:var(--border-radius-md);border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:12px;color:var(--color-text-primary)}
+.body{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-primary);overflow:hidden}
+.ph{padding:10px 14px;border-bottom:.5px solid var(--color-border-tertiary);font-size:12px;font-weight:500;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:space-between}
+.ph-tabs{display:flex;gap:2px}
+.ph-tab{padding:4px 10px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;border:none;background:transparent}
+.ph-tab.active{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.evtbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.evtbl th{font-size:10px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px;padding:7px 14px;text-align:left;background:var(--color-background-secondary);border-bottom:.5px solid var(--color-border-tertiary)}
+.evtbl td{padding:9px 14px;font-size:12px;color:var(--color-text-primary);border-bottom:.5px solid var(--color-border-tertiary)}
+.evtbl tr:last-child td{border-bottom:none}
+.empty{padding:2.5rem;text-align:center;color:var(--color-text-secondary);font-size:12px}
+.empty i{display:block;font-size:28px;margin-bottom:8px;color:var(--color-border-secondary)}
+.det{display:flex;flex-direction:column}
+.det-head{padding:12px 14px;border-bottom:.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px}
+.b-type{background:#E1F5EE;color:#085041;border:.5px solid #9FE1CB}
+.b-alert{background:#FCEBEB;color:#791F1F;border:.5px solid #F7C1C1}
+.b-high{background:#FAEEDA;color:#633806;border:.5px solid #FAC775}
+.det-rule{padding:11px 14px;border-bottom:.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.det-rule-l .rn{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.det-rule-l .ri{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.chart-wrap{padding:14px}
+.chart-title{font-size:11px;color:var(--color-text-secondary);margin-bottom:10px}
+.type-bars{display:flex;flex-direction:column;gap:7px}
+.tbar-row{display:flex;align-items:center;gap:8px}
+.tbar-label{font-size:11px;color:var(--color-text-secondary);width:60px;flex-shrink:0;font-family:var(--font-mono)}
+.tbar-track{flex:1;height:10px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.tbar-fill{height:100%;border-radius:3px;transition:width .4s}
+.tbar-num{font-size:11px;font-weight:500;color:var(--color-text-primary);min-width:14px;text-align:right}
+.json-block{font-family:var(--font-mono);font-size:11px;line-height:1.75;padding:14px;background:#16181a;color:#d4d8dc;flex:1;min-height:180px}
+.jk{color:#85B7EB}.js{color:#9FE1CB}.jn{color:#EF9F27}.ja{color:#F09595}.jp{color:#5DCAA5}
+.det-meta{padding:11px 14px;border-bottom:.5px solid var(--color-border-tertiary);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-l{font-size:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px}
+.meta-v{font-size:12px;font-weight:500;color:var(--color-text-primary);font-family:var(--font-mono)}
+</style>
+
+<h2 class="sr-only">EDR Agent 이벤트 탐지 및 알람 모니터링 대시보드 — 전체 이벤트 5건, 알람 4건</h2>
+
+<div class="d">
+  <div class="topbar">
+    <div>
+      <h1>EDR Agent</h1>
+      <p>이벤트 탐지 및 알람 모니터링</p>
+    </div>
+    <button class="upbtn"><i class="ti ti-upload" aria-hidden="true" style="font-size:14px"></i>로그 파일 업로드</button>
+  </div>
+
+  <div class="stats">
+    <div class="sc">
+      <div class="sc-label"><i class="ti ti-list" aria-hidden="true" style="font-size:13px"></i>전체 이벤트</div>
+      <div class="sc-val">5</div>
+      <div class="sc-bar"><div class="sc-bar-fill" style="width:100%;background:#85B7EB"></div></div>
+    </div>
+    <div class="sc">
+      <div class="sc-label"><i class="ti ti-bell" aria-hidden="true" style="font-size:13px"></i>알람 이벤트</div>
+      <div class="sc-val red">4</div>
+      <div class="sc-bar"><div class="sc-bar-fill" style="width:80%;background:#E24B4A"></div></div>
+    </div>
+    <div class="sc">
+      <div class="sc-label"><i class="ti ti-chart-bar" aria-hidden="true" style="font-size:13px"></i>가장 많은 타입</div>
+      <div class="sc-val mono">exec</div>
+      <div class="sc-bar"><div class="sc-bar-fill" style="width:60%;background:#5DCAA5"></div></div>
+    </div>
+    <div class="sc">
+      <div class="sc-label"><i class="ti ti-alert-triangle" aria-hidden="true" style="font-size:13px"></i>High 이상</div>
+      <div class="sc-val red">3</div>
+      <div class="sc-bar"><div class="sc-bar-fill" style="width:60%;background:#EF9F27"></div></div>
+    </div>
+  </div>
+
+  <div class="sev-row">
+    <div class="sev">
+      <div class="sev-top">
+        <span class="sev-name" style="color:#791F1F"><i class="ti ti-alert-octagon" aria-hidden="true" style="font-size:12px;margin-right:3px"></i>Critical</span>
+        <span class="sev-num" style="color:#791F1F">0</span>
+      </div>
+      <div class="sev-track"><div class="sev-fill" style="width:0%;background:#E24B4A"></div></div>
+    </div>
+    <div class="sev">
+      <div class="sev-top">
+        <span class="sev-name" style="color:#633806"><i class="ti ti-alert-triangle" aria-hidden="true" style="font-size:12px;margin-right:3px"></i>High</span>
+        <span class="sev-num" style="color:#633806">3</span>
+      </div>
+      <div class="sev-track"><div class="sev-fill" style="width:60%;background:#EF9F27"></div></div>
+    </div>
+    <div class="sev">
+      <div class="sev-top">
+        <span class="sev-name" style="color:#0C447C"><i class="ti ti-info-circle" aria-hidden="true" style="font-size:12px;margin-right:3px"></i>Medium</span>
+        <span class="sev-num" style="color:#0C447C">1</span>
+      </div>
+      <div class="sev-track"><div class="sev-fill" style="width:20%;background:#378ADD"></div></div>
+    </div>
+    <div class="sev">
+      <div class="sev-top">
+        <span class="sev-name" style="color:var(--color-text-secondary)"><i class="ti ti-circle-check" aria-hidden="true" style="font-size:12px;margin-right:3px"></i>Low</span>
+        <span class="sev-num" style="color:var(--color-text-secondary)">0</span>
+      </div>
+      <div class="sev-track"><div class="sev-fill" style="width:0%;background:#639922"></div></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="srch">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" placeholder="프로세스명, 경로, IP, 도메인, 룰 이름 검색" aria-label="이벤트 검색"/>
+    </div>
+    <div class="tog-wrap" onclick="var t=this.querySelector('.tog');t.classList.toggle('on')">
+      알람만 보기
+      <div class="tog" role="switch" aria-checked="false" aria-label="알람 이벤트만 보기"></div>
+    </div>
+    <select class="tsel" aria-label="이벤트 타입 필터">
+      <option>전체 타입</option>
+      <option selected>ns_unshare</option>
+      <option>exec</option>
+      <option>file_write</option>
+    </select>
+  </div>
+
+  <div class="body">
+    <div class="panel">
+      <div class="ph">
+        <span>이벤트 목록</span>
+        <div class="ph-tabs">
+          <button class="ph-tab active" onclick="setTab(this,'all')">전체 5</button>
+          <button class="ph-tab" onclick="setTab(this,'alert')">알람 4</button>
+        </div>
+      </div>
+      <table class="evtbl">
+        <thead>
+          <tr>
+            <th style="width:70px">ts</th>
+            <th style="width:68px">type</th>
+            <th style="width:55px">comm</th>
+            <th style="width:42px">pid</th>
+            <th>severity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="5"><div class="empty"><i class="ti ti-inbox" aria-hidden="true"></i>조건에 맞는 이벤트가 없습니다.</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel det">
+      <div class="ph">이벤트 상세</div>
+      <div class="det-head">
+        <span class="badge b-type">exec</span>
+        <span class="badge b-high"><i class="ti ti-alert-triangle" aria-hidden="true" style="font-size:10px;vertical-align:-1px;margin-right:2px"></i>high</span>
+      </div>
+
+      <div class="det-meta">
+        <div class="meta-item"><span class="meta-l">pid</span><span class="meta-v">1234</span></div>
+        <div class="meta-item"><span class="meta-l">ppid</span><span class="meta-v">1000</span></div>
+        <div class="meta-item"><span class="meta-l">uid / euid</span><span class="meta-v">0 / 0</span></div>
+        <div class="meta-item"><span class="meta-l">comm</span><span class="meta-v">bash</span></div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-title">이벤트 타입 분포</div>
+        <div class="type-bars">
+          <div class="tbar-row"><span class="tbar-label">exec</span><div class="tbar-track"><div class="tbar-fill" style="width:80%;background:#378ADD"></div></div><span class="tbar-num">4</span></div>
+          <div class="tbar-row"><span class="tbar-label">file_write</span><div class="tbar-track"><div class="tbar-fill" style="width:20%;background:#5DCAA5"></div></div><span class="tbar-num">1</span></div>
+          <div class="tbar-row"><span class="tbar-label">ns_unshare</span><div class="tbar-track"><div class="tbar-fill" style="width:0%;background:#85B7EB"></div></div><span class="tbar-num">0</span></div>
+        </div>
+      </div>
+
+      <div class="json-block"><span class="jk">{</span>
+  <span class="jk">"type"</span>: <span class="js">"exec"</span>,
+  <span class="jk">"ts"</span>: <span class="jn">12345.678</span>,
+  <span class="jk">"pid"</span>: <span class="jn">1234</span>,
+  <span class="jk">"ppid"</span>: <span class="jn">1000</span>,
+  <span class="jk">"uid"</span>: <span class="jn">0</span>,
+  <span class="jk">"comm"</span>: <span class="js">"bash"</span>,
+  <span class="jk">"path"</span>: <span class="jp">"/usr/bin/bash"</span>,
+  <span class="jk">"argv"</span>: [<span class="js">"bash"</span>, <span class="js">"-c"</span>, <span class="js">"id"</span>],
+  <span class="jk">"euid"</span>: <span class="jn">0</span>,
+  <span class="jk">"ld_preload"</span>: <span class="jn">false</span>,
+  <span class="ja">"alerts"</span>: []
+<span class="jk">}</span></div>
+    </div>
+  </div>
+</div>
+<script>
+function setTab(el,t){
+  el.closest('.ph').querySelectorAll('.ph-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
