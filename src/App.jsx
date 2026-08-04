@@ -1,8 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+// API 베이스 URL 결정 우선순위:
+//   1) VITE_EDR_API_BASE_URL 환경변수(설정 시 항상 우선)
+//   2) 프로덕션 빌드: 백엔드로 직접 요청 (Cloudflare Pages 는 vercel.json
+//      리라이트를 무시하므로 /edr-api 프록시가 동작하지 않는다. 백엔드는
+//      ebpf-agent.com 오리진에 대해 CORS 를 허용한다.)
+//   3) 로컬 개발: vite.config.js 의 /edr-api 프록시(→ 127.0.0.1:8888) 사용
+const DEFAULT_API_BASE_URL = import.meta.env.PROD
+  ? "https://asc4.jeonghuncompy.cloud"
+  : "/edr-api";
+
 const API_BASE_URL =
   import.meta.env.VITE_EDR_API_BASE_URL?.replace(/\/$/, "") ||
-  "/edr-api";
+  DEFAULT_API_BASE_URL;
 
 const EVENT_TYPES = [
   "all",
